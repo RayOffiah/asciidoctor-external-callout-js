@@ -6,8 +6,7 @@ asciidoctor.Extensions.register(function () {
 
         const self = this
 
-        const CALLOUT_ITEM_LINE_NUMBER_RX = /(?<phrase>.+)\s+@(?<location>\d+)/
-        const CALLOUT_ITEM_PHRASE_RX = /(?<phrase>.+)\s+@\/(?<location>.+)\//
+        const CALLOUT_ITEM_ARRAY_RX = /.+\s+@\d+|@\/.+\/\s+@\d+|@\/.+\/*/
 
         self.process(function (document) {
 
@@ -43,42 +42,57 @@ asciidoctor.Extensions.register(function () {
 
                 let item = list_item.getText()
 
-                if (item.match(CALLOUT_ITEM_LINE_NUMBER_RX)) {
+                let locations = item.split(/\s+@/)
 
-                    let match = item.match(CALLOUT_ITEM_LINE_NUMBER_RX)
+                // The first item in this array is our phrase. Hang on to it; you can use it later.
+                let phrase = locations[0]
 
-                    let location = match.groups['location']
-                    let line_number = parseInt(location)
+                let line_numbers = new Set()
+
+                locations.slice((locations.length - 1) * -1).forEach(location => {
+
+                    if (location.is_digits()) {
+
+                        let number = parseInt(location)
+
+                        if (number < owner_block.getSourceLines().length)
+                        {
+                            line_numbers.add(number - 1)
+                        }
+                        else {
+                            console.log(`Line number too large ==> ${number}`)
+                        }
+
+                    }
+                    else {
+                        //We must be dealing with a string matcher
+                        let number = find_matching_lines(location, owner_block)
+
+                        if (number > -1) {
+                            line_numbers.add(number)
+                        }
+                        else {
+                            console.log(`Phrase not found ==> ${location}`)
+                        }
+                    }
+
+                })
+
+                //Now add each callout to the listing
+
+                line_numbers.forEach(line_number => {
+
                     let callout = find_list_index_for_item(list_item)
 
-                    if (line_number < owner_block.getSourceLines().length) {
-                        owner_block.getSourceLines()[line_number - 1] += ` <${callout}>`
-                    }
-                    else {
-                        console.warn(`Line number out of range ==> ${item}`)
-                    }
-                }
-                else if (item.match(CALLOUT_ITEM_PHRASE_RX)) {
+                    owner_block.getSourceLines()[line_number] += ` <${callout}>`
+                })
 
-                    let match = item.match(CALLOUT_ITEM_PHRASE_RX)
-                    let location = match.groups['location']
 
-                    let line_number = owner_block.getSourceLines().findIndex((line) => line.match(new RegExp(location)))
+                list_item.setText(phrase)
 
-                    if (line_number < 0) {
-                        console.warn(`No match found for ${location} ==> ${item}`)
-                    }
-                    else {
+                // Now add each element you find to the source line
 
-                        let callout = find_list_index_for_item(list_item)
-                        owner_block.getSourceLines()[line_number] += ` <${callout}>`
-                    }
-                }
-                else {
-                    throw `Mismatched expression ==> ${item}`
-                }
-
-                list_item.setText(list_item.getText().replace(/@.+/, ""))
+                console.log(line_numbers)
 
             })
         }
@@ -89,8 +103,7 @@ asciidoctor.Extensions.register(function () {
          * @param list
          */
         function is_external_callout_list(list) {
-            return list.getBlocks().every((item) =>
-                item.text.match(CALLOUT_ITEM_LINE_NUMBER_RX) || item.text.match(CALLOUT_ITEM_PHRASE_RX) )
+            return list.getBlocks().every((item) => item.text.match(CALLOUT_ITEM_ARRAY_RX) )
 
         }
 
@@ -117,6 +130,20 @@ asciidoctor.Extensions.register(function () {
 
             let index_of_this_item = list.getBlocks().findIndex((item) => item === list_item)
             return index_of_this_item + 1
+        }
+
+        function find_matching_lines(search_string, owner_block) {
+
+            // Take the slashes of the search string
+            let phrase = search_string.substring(1, search_string.length - 1)
+
+            return owner_block.getSourceLines().findIndex(line => {
+                return line.match(phrase)
+            })
+        }
+
+        String.prototype.is_digits = function() {
+            return this.match(/\d+/)
         }
     })
 
