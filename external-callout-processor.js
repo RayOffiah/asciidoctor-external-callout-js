@@ -103,7 +103,8 @@ asciidoctor.Extensions.register(function () {
          * @param list
          */
         function is_external_callout_list(list) {
-            return list.getBlocks().every((item) => item.text.match(CALLOUT_ITEM_ARRAY_RX) )
+            return list.getBlocks().every((item) => item.text.match(CALLOUT_ITEM_ARRAY_RX)
+                && item.getBlocks().length === 0)
 
         }
 
@@ -138,7 +139,7 @@ asciidoctor.Extensions.register(function () {
             let phrase = search_string.substring(1, search_string.length - 1)
 
             return owner_block.getSourceLines().findIndex(line => {
-                return line.match(phrase)
+                return line.match(new RegExp(phrase))
             })
         }
 
