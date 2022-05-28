@@ -1,12 +1,6 @@
 :source-highlighter: highlight.js
 :icons: font
 
-[source, json]
-----
-{"me":  "test block"}
-----
-
-
 [source, ruby]
 ----
 class ExternalCalloutTreeProcessor < Extensions::TreeProcessor
@@ -53,6 +47,12 @@ include::sample.json[]
 ----
 . This is the line with the second name @/second_name/
 . Missing string @/Wellington boot/
+
+[source, json5]
+----
+{"me":  "test block"}  // <.>
+----
+<.> Test block
 
 
 [source, shell]

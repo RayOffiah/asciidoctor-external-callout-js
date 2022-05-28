@@ -33,6 +33,7 @@ asciidoctor.Extensions.register(function () {
                 }
             })
 
+
             return document
         })
 
@@ -70,9 +71,7 @@ asciidoctor.Extensions.register(function () {
                     else {
 
                         let callout = find_list_index_for_item(list_item)
-
                         owner_block.getSourceLines()[line_number] += ` <${callout}>`
-
                     }
                 }
                 else {

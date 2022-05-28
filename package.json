@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "asciidoctor": "^2.2.6"
+    "asciidoctor": "^2.2.6",
+    "opal-compiler": "^2.1.0",
+    "opal-runtime": "^2.3.0"
   }
 }
