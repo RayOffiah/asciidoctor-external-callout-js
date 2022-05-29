@@ -1,4 +1,4 @@
-const asciidoctor = require('asciidoctor')()
+const asciidoctor = require('@asciidoctor/core')()
 
 asciidoctor.Extensions.register(function () {
 
@@ -23,7 +23,7 @@ asciidoctor.Extensions.register(function () {
                         }
 
                         process_callouts(list, owner_block)
-                        list.context = 'colist'
+                        list.context = list.node_name ='colist'
 
                     }
                     catch (e) {
@@ -87,12 +87,7 @@ asciidoctor.Extensions.register(function () {
                     owner_block.getSourceLines()[line_number] += ` <${callout}>`
                 })
 
-
                 list_item.setText(phrase)
-
-                // Now add each element you find to the source line
-
-                console.log(line_numbers)
 
             })
         }
