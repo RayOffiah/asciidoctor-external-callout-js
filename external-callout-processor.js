@@ -55,7 +55,7 @@ asciidoctor.Extensions.register(function () {
 
                         let number = parseInt(location)
 
-                        if (number < owner_block.getSourceLines().length)
+                        if (number <= owner_block.getSourceLines().length)
                         {
                             line_numbers.add(number - 1)
                         }
