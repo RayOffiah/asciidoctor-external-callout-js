@@ -6,7 +6,8 @@ asciidoctor.Extensions.register(function () {
 
         const self = this
 
-        const CALLOUT_ITEM_ARRAY_RX = /.+\s+@\d+|@\/.+\/\s+@\d+|@\/.+\/*/
+        const LOCATION_TOKEN_RX = /(@\d+|@\/[^\/]+?\/)/
+        const LOCATION_TOKEN_ARRAY_RX = /^(@\d+|@\/[^\/]+?\/)((\s+@\d+)|(\s+@\/[^\/]+?\/))*$/
 
         self.process(function (document) {
 
@@ -36,16 +37,46 @@ asciidoctor.Extensions.register(function () {
             return document
         })
 
+        /**
+         * Make sure that this list is in the correct format
+         * We don't process it otherwise.
+         * @param list
+         */
+        function is_external_callout_list(list) {
+
+            return list.getBlocks().every((x) => {
+
+                let item_under_test = x.getText()
+                let location_token_index = item_under_test.search(LOCATION_TOKEN_RX)
+
+                // if we don't find the start of the list of location tokens, or the token is the first item
+                // then we don't need to carry on any further; this is not the list we are looking for.
+
+                if (location_token_index < 1) {
+                    return false
+                }
+
+                let location_tokens = item_under_test.substring(location_token_index).trim()
+                return location_tokens.match(LOCATION_TOKEN_ARRAY_RX) && x.getBlocks().length === 0
+            })
+
+        }
+
         function process_callouts(list, owner_block) {
 
             list.getBlocks().forEach((list_item) => {
 
                 let item = list_item.getText()
 
-                let locations = item.split(/\s+@/)
+                let location_token_index = item.search(LOCATION_TOKEN_RX)
 
-                // The first item in this array is our phrase. Hang on to it; you can use it later.
-                let phrase = locations[0]
+                // Just the locations tokens at the end of the item.
+                let location_tokens = item.substring(location_token_index).trim()
+
+                // The text of the item itself
+                let phrase = item.substring(0, location_token_index -1).trim()
+
+                let locations = location_tokens.split(/\s+@/)
 
                 let line_numbers = new Set()
 
@@ -92,17 +123,6 @@ asciidoctor.Extensions.register(function () {
             })
         }
 
-        /**
-         * Make sure that this list is in the correct format
-         * We don't process it otherwise.
-         * @param list
-         */
-        function is_external_callout_list(list) {
-            return list.getBlocks().every((item) => item.text.match(CALLOUT_ITEM_ARRAY_RX)
-                && item.getBlocks().length === 0)
-
-        }
-
         function owning_block(list) {
 
             let block_above = list.getParent()
@@ -139,7 +159,7 @@ asciidoctor.Extensions.register(function () {
         }
 
         String.prototype.is_digits = function() {
-            return this.match(/\d+/)
+            return this.match(/^\d+$/)
         }
     })
 
