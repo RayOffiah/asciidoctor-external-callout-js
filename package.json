@@ -1,5 +1,5 @@
 {
-  "name": "external-callout-processor",
+  "name": "asciidoctor-external-callout",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ray Offiah",
   "license": "ISC",
   "dependencies": {
     "@asciidoctor/core": "^2.2.6",

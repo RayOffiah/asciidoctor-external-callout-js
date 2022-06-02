@@ -1,5 +1,5 @@
 const asciidoctor = require('asciidoctor')()
-require('./external-callout-processor')
+require('./asciidoctor-external-callout')
 
-asciidoctor.convertFile('./sample.adoc', {safe: 'safe', standalone: true, attributes: {'icons': 'font'}})
+asciidoctor.convertFile('./sample.adoc', {safe: 'safe', standalone: true})
 
