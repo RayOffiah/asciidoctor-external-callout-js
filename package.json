@@ -8,10 +8,13 @@
   },
   "keywords": ["asciidoc", "asciidoctor", "callouts", "listing" ],
   "author": "Ray Offiah",
+  "homepage": "https://github.com/RayOffiah/asciidoctor-external-callout-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RayOffiah/asciidoctor-external-callout-js"
+  },
   "license": "MIT",
   "dependencies": {
-    "@asciidoctor/core": "^2.2.6",
-    "opal-compiler": "^2.1.0",
-    "opal-runtime": "^2.3.0"
+    "@asciidoctor/core": "^2.2.6"
   }
 }
