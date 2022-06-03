@@ -7,7 +7,6 @@ asciidoctor.Extensions.register(function () {
         const self = this
 
         const LOCATION_TOKEN_RX = /(@\d+|@\/[^\/]+?\/)/
-        const LOCATION_TOKEN_GLOBAL_RX = /@(\d+)|@\/([^\/]+?)\//g
         const LOCATION_TOKEN_ARRAY_RX = /^(@\d+|@\/[^\/]+?\/)((\s+@\d+)|(\s+@\/[^\/]+?\/))*$/
 
         self.process(function (document) {
@@ -77,13 +76,13 @@ asciidoctor.Extensions.register(function () {
                 // The text of the item itself
                 let phrase = item.substring(0, location_token_index -1).trim()
 
-                let locations = location_tokens.scan(LOCATION_TOKEN_GLOBAL_RX).flat().filter(token => token !== undefined)
+                let locations = location_tokens.split(/\s+@/)
 
                 let line_numbers = new Set()
 
-                locations.forEach(location => {
+                locations.slice((locations.length - 1) * -1).forEach(location => {
 
-                    if (location.is_numeric()) {
+                    if (location.is_digits()) {
 
                         let number = parseInt(location)
 
@@ -149,35 +148,18 @@ asciidoctor.Extensions.register(function () {
             return index_of_this_item + 1
         }
 
-        function find_matching_lines(phrase, owner_block) {
+        function find_matching_lines(search_string, owner_block) {
+
+            // Take the slashes of the search string
+            let phrase = search_string.substring(1, search_string.length - 1)
 
             return owner_block.getSourceLines().findIndex(line => {
                 return line.match(new RegExp(phrase))
             })
         }
 
-        String.prototype.is_numeric = function() {
+        String.prototype.is_digits = function() {
             return this.match(/^\d+$/)
-        }
-
-        //Borrowed this function so that we can have
-        // a scan that works in the same way as the Ruby version of the
-        // callout extension.
-        String.prototype.scan = function(regexp) {
-
-            if (!regexp.global) {
-                throw new Error("RegExp without global (g) flag is not supported.")
-            }
-            let result = []
-            let m
-            while (m = regexp.exec(this)) {
-                if (m.length >= 2) {
-                    result.push(m.slice(1));
-                } else {
-                    result.push(m[0])
-                }
-            }
-            return result
         }
     })
 

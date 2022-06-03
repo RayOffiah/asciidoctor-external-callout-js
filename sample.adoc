@@ -34,8 +34,8 @@ class ExternalCalloutTreeProcessor < Extensions::TreeProcessor
 
 end
 ----
-1. test @{zwsp}5 test @5 @/result/ @6
-2. this is another test @5
+1. test @{zwsp}5 test @5
+2. this is another test @5 @/result/
 3. Another callout on the same line @5
 4. this is a string find @/result/
 5. Out of range @500
