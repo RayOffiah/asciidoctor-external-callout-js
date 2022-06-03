@@ -1,17 +1,16 @@
 {
   "name": "asciidoctor-external-callout",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.0-beta1",
+  "description": "Asciidoctor extension that adds support for callouts added outside the listing block.",
+  "main": "asciidoctor-external-callout.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["asciidoc", "asciidoctor", "callouts", "listing" ],
   "author": "Ray Offiah",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@asciidoctor/core": "^2.2.6",
-    "asciidoctor": "^2.2.6",
     "opal-compiler": "^2.1.0",
     "opal-runtime": "^2.3.0"
   }

@@ -1,0 +1,55 @@
+= External callouts for Asciidoctor
+
+== Description
+
+An https://asciidoctor.org/[Asciidoctor] extension which adds support for callout tags added outside the listing block.
+
+== Motivation
+
+Aside from getting little practice around  Ruby and JavaScript, I decided to have a crack at this to help with a problem that comes up at work every so often.
+
+The https://docs.asciidoctor.org/asciidoc/latest/verbatim/callouts/[callout mechanism] for Asciidoc works extremely well in 99% of the cases I run into:
+
+[source, asciidoc, subs=-callouts]
+-----
+[source,ruby]
+----
+require 'sinatra' #<1>
+
+get '/hi' do #<2> #<3>
+  "Hello World!"
+end
+----
+<1> Library import
+<2> URL mapping
+<3> Response block
+-----
+
+Great, but it does mean you have to add commented to the tags to the source code to register the callout in the following block. As I've said, this is fine, 99% of the time, but I've run across a few occasions when adding tags to the source code (either in-line or an included file) can be a little problematic:
+
+. Restricted access to the source code: as a humble tech-writer, you might not have access to the included source code to add your own tags.
+. The source code has to remain runnable, but doesn't have a commenting mechanism that works well with Asciidoc (shell scripts spring to mind.)
+
+== A possible Solution
+And that's where this extension comes in: it adds support adding tags outside the source listing block, like this:
+
+[source, asciidoc, subs=-callouts]
+-----
+[source,ruby]
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+----
+. Library import @3
+. URL mapping @5
+. Response block @5
+-----
+
+Rather than tagging the code, you add a location token at the end of a list item, which will then add the tag at the specified line number. Run the source text through Asciidoctor{plus}extension, and it'll spit the same source block complete with callouts.
+
+
+
+
