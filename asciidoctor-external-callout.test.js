@@ -1,4 +1,7 @@
 const asciidoctor = require('@asciidoctor/core')()
+const registry = asciidoctor.Extensions.create()
+require('./asciidoctor-external-callout.js')(registry)
+
 
 require('./asciidoctor-external-callout')
 
@@ -20,7 +23,7 @@ echo "Total number of arguments is $#"
 . Echo the surname @5
 . Explain the total number of arguments   @/number of .+/
 `
-    let converted_doc = asciidoctor.convert(input_document,{safe: 'safe', standalone: true})
+    let converted_doc = asciidoctor.convert(input_document,{safe: 'safe', standalone: true, extension_registry: registry})
     expect(converted_doc.length).toBeGreaterThan(0)
     expect(converted_doc.includes('My first name is $1')).toBeTruthy()
     expect(converted_doc.includes('Echo the surname @5')).toBeFalsy()

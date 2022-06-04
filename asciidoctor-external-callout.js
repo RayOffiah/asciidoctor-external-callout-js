@@ -1,8 +1,8 @@
-const asciidoctor = require('@asciidoctor/core')()
+require('@asciidoctor/core')
 
-asciidoctor.Extensions.register(function () {
+module.exports = function (registry) {
 
-    this.treeProcessor(function () {
+    registry.treeProcessor(function () {
 
         const self = this
 
@@ -13,6 +13,7 @@ asciidoctor.Extensions.register(function () {
         self.process(function (document) {
 
             document.findBy({'context': 'olist'}, function (list) {
+
 
                 if (is_external_callout_list(list)) {
 
@@ -25,15 +26,13 @@ asciidoctor.Extensions.register(function () {
                         }
 
                         process_callouts(list, owner_block)
-                        list.context = list.node_name ='colist'
+                        list.context = list.node_name = 'colist'
 
-                    }
-                    catch (e) {
+                    } catch (e) {
                         console.error(e)
                     }
                 }
             })
-
 
             return document
         })
@@ -75,7 +74,7 @@ asciidoctor.Extensions.register(function () {
                 let location_tokens = item.substring(location_token_index).trim()
 
                 // The text of the item itself
-                let phrase = item.substring(0, location_token_index -1).trim()
+                let phrase = item.substring(0, location_token_index - 1).trim()
 
                 let locations = location_tokens.scan(LOCATION_TOKEN_GLOBAL_RX).flat().filter(token => token !== undefined)
 
@@ -87,23 +86,19 @@ asciidoctor.Extensions.register(function () {
 
                         let number = parseInt(location)
 
-                        if (number <= owner_block.getSourceLines().length)
-                        {
+                        if (number <= owner_block.getSourceLines().length) {
                             line_numbers.add(number - 1)
-                        }
-                        else {
+                        } else {
                             console.log(`Line number too large ==> ${number}`)
                         }
 
-                    }
-                    else {
+                    } else {
                         //We must be dealing with a string matcher
                         let number = find_matching_lines(location, owner_block)
 
                         if (number > -1) {
                             line_numbers.add(number)
-                        }
-                        else {
+                        } else {
                             console.log(`Phrase not found ==> ${location}`)
                         }
                     }
@@ -156,14 +151,14 @@ asciidoctor.Extensions.register(function () {
             })
         }
 
-        String.prototype.is_numeric = function() {
+        String.prototype.is_numeric = function () {
             return this.match(/^\d+$/)
         }
 
         //Borrowed this function so that we can have
         // a scan that works in the same way as the Ruby version of the
         // callout extension.
-        String.prototype.scan = function(regexp) {
+        String.prototype.scan = function (regexp) {
 
             if (!regexp.global) {
                 throw new Error("RegExp without global (g) flag is not supported.")
@@ -181,4 +176,4 @@ asciidoctor.Extensions.register(function () {
         }
     })
 
-})
+}
