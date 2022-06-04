@@ -4,7 +4,7 @@
   "description": "Asciidoctor extension that adds support for callouts added outside the listing block.",
   "main": "asciidoctor-external-callout.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "asciidoc",
@@ -21,5 +21,9 @@
   "license": "MIT",
   "dependencies": {
     "@asciidoctor/core": "^2.2.6"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "@types/jest": "^28.1.0"
   }
 }
