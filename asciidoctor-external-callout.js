@@ -66,7 +66,9 @@ module.exports = function (registry) {
 
             list.getBlocks().forEach((list_item) => {
 
-                let item = list_item.getText()
+                // Don't use getText() because this returns the string
+                // preformatted – just get the raw item instead.
+                let item = list_item.text
 
                 let location_token_index = item.search(LOCATION_TOKEN_RX)
 
