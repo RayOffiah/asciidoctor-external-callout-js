@@ -123,19 +123,43 @@ module.exports = function (registry) {
 
         function owning_block(list) {
 
-            let block_above = list.getParent()
+            let block_parent = list.getParent()
 
-            if (block_above === undefined) {
+            if (block_parent === undefined) {
                 throw "There is no block above the callout list"
             }
 
-            let index_of_this_item = block_above.getBlocks().findIndex((block) => block === list)
+            let index_back = block_parent.getBlocks().findIndex((block) => block === list)
 
-            if (block_above.getBlocks()[index_of_this_item - 1].getContext() !== 'listing') {
-                throw "Callout list: the attached block is not a source listing"
+            if (index_back === undefined) {
+                // Shouldn't happen because we managed to get this far
+                throw "Error – could not locate our ordered list"
             }
 
-            return block_above.getBlocks()[index_of_this_item - 1]
+            // From the position of our ordered list, scan backwards until we find the next correct
+            // source listing, looking for hazards along the way.
+            while (index_back > 0) {
+
+                index_back = index_back - 1;
+
+                if (block_parent.getBlocks()[index_back].getContext() === 'listing') {
+
+                    // We have found our matching block
+                    return block_parent.getBlocks()[index_back]
+                }
+
+                if (block_parent.getBlocks()[index_back].getContext() === 'colist') {
+
+                    // We have hit another callout list, but there was no list block first.
+                    // Assume we have it an error
+                    throw "Callout list found while seeking listing"
+                }
+
+            }
+
+            // If we didn't find a listing then this document has probably got
+            // bits missing.
+            throw "No listing found"
         }
 
         function find_list_index_for_item(list_item) {

@@ -17,7 +17,7 @@ class ExternalCalloutTreeProcessor < Extensions::TreeProcessor
 
         result = []
 
-        while (line = stdout.gets)
+        while (line = stdout.gets) <1>
           result << line
         end
 
@@ -34,6 +34,10 @@ class ExternalCalloutTreeProcessor < Extensions::TreeProcessor
 
 end
 ----
+<1> thes test
+
+Can I add something in here?
+
 1. test `at`  @5
 2. this is another test @5 @/result/
 3. Another callout on the same line @5
