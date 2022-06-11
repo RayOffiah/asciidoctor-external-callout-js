@@ -46,7 +46,7 @@ module.exports = function (registry) {
 
             return list.getBlocks().every((x) => {
 
-                let item_under_test = x.getText()
+                let item_under_test = x.text
                 let location_token_index = item_under_test.search(LOCATION_TOKEN_RX)
 
                 // if we don't find the start of the list of location tokens, or the token is the first item
@@ -151,7 +151,7 @@ module.exports = function (registry) {
                 if (block_parent.getBlocks()[index_back].getContext() === 'colist') {
 
                     // We have hit another callout list, but there was no list block first.
-                    // Assume we have it an error
+                    // Assume we have an error
                     throw "Callout list found while seeking listing"
                 }
 
