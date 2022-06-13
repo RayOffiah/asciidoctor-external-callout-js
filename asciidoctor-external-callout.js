@@ -6,6 +6,9 @@ module.exports = function (registry) {
 
         const self = this
 
+        const CALLOUT_SOURCE_BLOCK_ROLE = 'external-callout-block'
+        const CALLOUT_ORDERED_LIST_ROLE = 'external-callout-list'
+
         const LOCATION_TOKEN_RX = /(@\d+|@\/[^\/]+?\/)/
         const LOCATION_TOKEN_GLOBAL_RX = /@(\d+)|@\/([^\/]+?)\//g
         const LOCATION_TOKEN_ARRAY_RX = /^(@\d+|@\/[^\/]+?\/)((\s+@\d+)|(\s+@\/[^\/]+?\/))*$/
@@ -27,6 +30,14 @@ module.exports = function (registry) {
 
                         process_callouts(list, owner_block)
                         list.context = list.node_name = 'colist'
+
+                        if (!list.getRoles().includes(CALLOUT_ORDERED_LIST_ROLE)) {
+                            list.addRole(CALLOUT_ORDERED_LIST_ROLE)
+                        }
+
+                        if (!owner_block.getRoles().includes(CALLOUT_SOURCE_BLOCK_ROLE)) {
+                            owner_block.addRole(CALLOUT_SOURCE_BLOCK_ROLE)
+                        }
 
                     } catch (e) {
                         console.error(e)

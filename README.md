@@ -51,7 +51,7 @@ Rather than tagging the code, you add a location token at the end of a list item
 
 Two types of location token are supported:
 
-**@_number_** – This format takes a numeric value indicating the line in the source block where the callout should appear. The callouts will appear at the end of the line. Multiple callouts on the same line will have a single space between tham.
+**@_number_** – This format takes a numeric value indicating the line in the source block where the callout should appear. The callouts will appear at the end of the line. Multiple callouts on the same line will have a single space between them.
 
 **@/_text_/** – The text between the two slashes will be used in a regex search. A callout will be placed at the end of the first matching line.
 If you have a large listing then it may be preferable to use the text search rather than counting all the lines. It may also be preferable to use a smaller listing, as a long listing might mean that your description is a bit too general.
