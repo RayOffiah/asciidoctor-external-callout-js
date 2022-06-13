@@ -27,7 +27,7 @@ end
 Great, but it does mean you have to add commented to the tags to the source code to register the callout in the following block. As I've said, this is fine, 99% of the time, but I've run across a few occasions when adding tags to the source code (either in-line or an included file) can be a little problematic:
 
 1. Restricted access to the source code: as a humble tech-writer, you might not have access to the included source code to add your own tags.
-1. The source code has to remain runnable, but doesn't have a commenting mechanism that works well with Asciidoc (shell scripts and Json files spring to mind.)
+2. The source code has to remain runnable, but doesn't have a commenting mechanism that works well with Asciidoc (shell scripts and Json files spring to mind.)
 
 ## A possible Solution
 And that's where this extension comes in: it adds support adding tags outside the source listing block, like this:
