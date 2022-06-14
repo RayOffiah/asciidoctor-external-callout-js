@@ -60,6 +60,7 @@ Using the text search method means that the location of the callout will move wi
 You can have multiple callouts on the same line.
 You can also mix and match numeric and text callout tokens on the same list item. (Though I'm not sure why you would).
 
+
 ## Installation
 
 ### Node module
@@ -92,4 +93,16 @@ You will also need to register the extension in the playbook used to generate th
 
 ```
 
+## Formatting
 
+By default, the callout extension will put a single space between callouts that occur on the same line. If you want to adjust this, then you need to create a style that puts a horizontal margin between the callouts:
+
+```css
+div.external-callout-block i.conum {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+```
+The callout attaches a class called `external-callout-block` to each source listing it processes. You can use this to differentiate between standard callouts, and callouts written by the extension.
+
+The extension also adds a class called `external-callout-list` to the list of definitions at the bottom of the source block. (There's probably no need to adjust the styling for this.)
