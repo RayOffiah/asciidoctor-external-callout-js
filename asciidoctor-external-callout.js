@@ -9,8 +9,7 @@ module.exports = function (registry) {
         const CALLOUT_SOURCE_BLOCK_ROLE = 'external-callout-block'
         const CALLOUT_ORDERED_LIST_ROLE = 'external-callout-list'
 
-        const LOCATION_TOKEN_RX = /(@\d+|@\/[^\/]+?\/)/
-        const LOCATION_TOKEN_GLOBAL_RX = /@(\d+)|@\/([^\/]+?)\//g
+        const LOCATION_TOKEN_RX = /@(\d+)|@\/([^\/]+?)\//
         const LOCATION_TOKEN_ARRAY_RX = /^(@\d+|@\/[^\/]+?\/)((\s+@\d+)|(\s+@\/[^\/]+?\/))*$/
 
         self.process(function (document) {
@@ -89,7 +88,8 @@ module.exports = function (registry) {
                 // The text of the item itself
                 let phrase = item.substring(0, location_token_index - 1).trim()
 
-                let locations = location_tokens.scan(LOCATION_TOKEN_GLOBAL_RX).flat().filter(token => token !== undefined)
+                let locations = location_tokens.scan(new RegExp(LOCATION_TOKEN_RX, 'g'))
+                    .flat().filter(token => token !== undefined)
 
                 let line_numbers = new Set()
 
