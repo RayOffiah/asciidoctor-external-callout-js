@@ -27,7 +27,7 @@ end
 Great, but it does mean you have to add commented to the tags to the source code to register the callout in the following block. As I've said, this is fine, 99% of the time, but I've run across a few occasions when adding tags to the source code (either in-line or an included file) can be a little problematic:
 
 1. Restricted access to the source code: as a humble tech-writer, you might not have access to the included source code to add your own tags.
-1. The source code has to remain runnable, but doesn't have a commenting mechanism that works well with Asciidoc (shell scripts and Json files spring to mind.)
+2. The source code has to remain runnable, but doesn't have a commenting mechanism that works well with Asciidoc (shell scripts and Json files spring to mind.)
 
 ## A possible Solution
 And that's where this extension comes in: it adds support adding tags outside the source listing block, like this:
@@ -51,7 +51,7 @@ Rather than tagging the code, you add a location token at the end of a list item
 
 Two types of location token are supported:
 
-**@_number_** – This format takes a numeric value indicating the line in the source block where the callout should appear. The callouts will appear at the end of the line. Multiple callouts on the same line will have a single space between tham.
+**@_number_** – This format takes a numeric value indicating the line in the source block where the callout should appear. The callouts will appear at the end of the line. Multiple callouts on the same line will have a single space between them.
 
 **@/_text_/** – The text between the two slashes will be used in a regex search. A callout will be placed at the end of the first matching line.
 If you have a large listing then it may be preferable to use the text search rather than counting all the lines. It may also be preferable to use a smaller listing, as a long listing might mean that your description is a bit too general.
@@ -59,6 +59,7 @@ Using the text search method means that the location of the callout will move wi
 
 You can have multiple callouts on the same line.
 You can also mix and match numeric and text callout tokens on the same list item. (Though I'm not sure why you would).
+
 
 ## Installation
 
@@ -92,4 +93,16 @@ You will also need to register the extension in the playbook used to generate th
 
 ```
 
+## Formatting
 
+By default, the callout extension will put a single space between callouts that occur on the same line. If you want to adjust this, then you need to create a style that puts a horizontal margin between the callouts:
+
+```css
+div.external-callout-block i.conum {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+```
+The callout attaches a class called `external-callout-block` to each source listing it processes. You can use this to differentiate between standard callouts, and callouts written by the extension.
+
+The extension also adds a class called `external-callout-list` to the list of definitions at the bottom of the source block. (There's probably no need to adjust the styling for this.)

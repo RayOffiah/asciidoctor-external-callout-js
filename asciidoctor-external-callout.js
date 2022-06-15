@@ -6,8 +6,10 @@ module.exports = function (registry) {
 
         const self = this
 
-        const LOCATION_TOKEN_RX = /(@\d+|@\/[^\/]+?\/)/
-        const LOCATION_TOKEN_GLOBAL_RX = /@(\d+)|@\/([^\/]+?)\//g
+        const CALLOUT_SOURCE_BLOCK_ROLE = 'external-callout-block'
+        const CALLOUT_ORDERED_LIST_ROLE = 'external-callout-list'
+
+        const LOCATION_TOKEN_RX = /@(\d+)|@\/([^\/]+?)\//
         const LOCATION_TOKEN_ARRAY_RX = /^(@\d+|@\/[^\/]+?\/)((\s+@\d+)|(\s+@\/[^\/]+?\/))*$/
 
         self.process(function (document) {
@@ -27,6 +29,14 @@ module.exports = function (registry) {
 
                         process_callouts(list, owner_block)
                         list.context = list.node_name = 'colist'
+
+                        if (!list.getRoles().includes(CALLOUT_ORDERED_LIST_ROLE)) {
+                            list.addRole(CALLOUT_ORDERED_LIST_ROLE)
+                        }
+
+                        if (!owner_block.getRoles().includes(CALLOUT_SOURCE_BLOCK_ROLE)) {
+                            owner_block.addRole(CALLOUT_SOURCE_BLOCK_ROLE)
+                        }
 
                     } catch (e) {
                         console.error(e)
@@ -78,7 +88,8 @@ module.exports = function (registry) {
                 // The text of the item itself
                 let phrase = item.substring(0, location_token_index - 1).trim()
 
-                let locations = location_tokens.scan(LOCATION_TOKEN_GLOBAL_RX).flat().filter(token => token !== undefined)
+                let locations = location_tokens.scan(new RegExp(LOCATION_TOKEN_RX, 'g'))
+                    .flat().filter(token => token !== undefined)
 
                 let line_numbers = new Set()
 
