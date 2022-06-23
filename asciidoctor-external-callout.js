@@ -9,8 +9,10 @@ module.exports = function (registry) {
         const CALLOUT_SOURCE_BLOCK_ROLE = 'external-callout-block'
         const CALLOUT_ORDERED_LIST_ROLE = 'external-callout-list'
 
-        const LOCATION_TOKEN_RX = /@(\d+)|@\/([^\/]+?)\//
-        const LOCATION_TOKEN_ARRAY_RX = /^(@\d+|@\/[^\/]+?\/)((\s+@\d+)|(\s+@\/[^\/]+?\/))*$/
+        const LOCATION_TOKEN_RX = /@(\d+)|(@\/[^\/]+?\/(?:i|g|gi|ig){0,2})/
+
+        const LOCATION_TOKEN_ARRAY_RX =
+            /^(@\d+|@\/[^\/]+?\/(i|g|gi|ig){0,2})((\s+@\d+)|(\s+@\/[^\/]+?\/(i|g|gi|ig){0,2}))*$/
 
         self.process(function (document) {
 
@@ -107,10 +109,18 @@ module.exports = function (registry) {
 
                     } else {
                         //We must be dealing with a string matcher
-                        let number = find_matching_lines(location, owner_block)
 
-                        if (number > -1) {
-                            line_numbers.add(number)
+                        // Is this a global search?
+                        let global_search = location.match(/\/([^\/]+?)\/.*g.*/) != null
+                        let case_insensitive = location.match(/\/([^\/]+?)\/.*i.*/) != null
+                        let search_string = location.match(/\/([^\/]+?)\//)[1]
+                        let numbers = find_matching_lines(search_string, global_search, case_insensitive, owner_block)
+
+                        if (numbers.size > 0) {
+
+                            // This is how you union two sets, apparently.
+                            line_numbers = new Set([...line_numbers, ...numbers])
+
                         } else {
                             console.log(`Phrase not found ==> ${location}`)
                         }
@@ -181,11 +191,33 @@ module.exports = function (registry) {
             return index_of_this_item + 1
         }
 
-        function find_matching_lines(phrase, owner_block) {
+        function find_matching_lines(phrase, global_search, case_insensitive, owner_block) {
 
-            return owner_block.getSourceLines().findIndex(line => {
-                return line.match(new RegExp(phrase))
+            let found_line_numbers = new Set()
+
+            let search_term
+
+            if (case_insensitive) {
+                search_term = new RegExp(phrase, 'i')
+            }
+            else {
+                search_term = new RegExp(phrase)
+            }
+
+
+            owner_block.getSourceLines().forEach((line, index) => {
+
+                if (line.match(search_term) != null) {
+
+                   found_line_numbers.add(index)
+                }
+
+                if (!global_search) {
+                    return found_line_numbers
+                }
             })
+
+            return found_line_numbers
         }
 
         String.prototype.is_numeric = function () {
