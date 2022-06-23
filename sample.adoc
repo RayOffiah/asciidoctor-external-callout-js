@@ -39,34 +39,8 @@ end
 Can I add something in here?
 
 1. test `at`  @5
-2. this is another test @5 @/result/
+2. this is another test @5 @/Result/gi
 3. Another callout on the same line @5
 4. this is a string find @/result/
 5. Out of range @500
 
-
-[source, json]
-----
-include::sample.json[]
-----
-. This is the line with the second name @/second_name/
-. Missing string @/Wellington boot/
-
-[source, json5]
-----
-{"me":  "test block"}  // <.>
-----
-<.> Test block
-
-
-[source, shell]
-----
-#!/bin/bash
-
-# example of using arguments to a script
-echo "My first name is $1"
-echo "My surname is $2"
-echo "Total number of arguments is $#"
-----
-. Echo the surname @5
-. Explain the total number of arguments   @/number of .+/
