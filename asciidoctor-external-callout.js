@@ -99,12 +99,12 @@ module.exports = function (registry) {
 
                     if (location.is_numeric()) {
 
-                        let number = parseInt(location)
+                        let line_number = parseInt(location)
 
-                        if (number <= owner_block.getSourceLines().length) {
-                            line_numbers.add(number - 1)
+                        if (line_number > 0 && line_number <= owner_block.getSourceLines().length) {
+                            line_numbers.add(line_number - 1)
                         } else {
-                            console.log(`Line number too large ==> ${number}`)
+                            console.log(`Line number out of range ==> ${line_number}`)
                         }
 
                     } else {

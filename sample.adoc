@@ -38,9 +38,10 @@ end
 
 Can I add something in here?
 
-1. test `at`  @5
-2. this is another test @5 @/Result/gi
-3. Another callout on the same line @5
-4. this is a string find @/result/
-5. Out of range @500
+. test `at`  @5
+. this is another test @5 @/Result/gi
+. Another callout on the same line @5
+. this is a string find @/result/
+. Out of range @500
+. Can't have zero lines @0
 

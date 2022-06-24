@@ -22,6 +22,8 @@ echo "Total number of arguments is $#"
 ----
 . Echo the surname @5
 . Explain the total number of arguments   @/number of .+/
+. This is a very high number @500
+. There is no line zero @0
 `
     let converted_doc = asciidoctor.convert(input_document,{safe: 'safe', standalone: true,
         extension_registry: registry})
@@ -31,5 +33,8 @@ echo "Total number of arguments is $#"
     expect(converted_doc.includes('Echo the surname @5')).toBeFalsy()
     expect(converted_doc.includes('My surname is $2" <i class="conum" data-value="1">')).toBeTruthy()
     expect(converted_doc.includes('Total number of arguments is $#" <i class="conum" data-value="2">'))
+
+    expect(converted_doc.includes('<b>(3)</b>') || converted_doc.includes('<b>(4)</b>')).toBe(false)
+
 
 })
