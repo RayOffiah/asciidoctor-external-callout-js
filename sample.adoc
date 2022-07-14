@@ -45,4 +45,3 @@ Can I add something in here?
 . Out of range @500
 . Can't have zero lines @0
 . Find Eureka @/Eur\/eka/
-. Invalid search options @/search/gg
