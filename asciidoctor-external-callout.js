@@ -9,10 +9,12 @@ module.exports = function (registry) {
         const CALLOUT_SOURCE_BLOCK_ROLE = 'external-callout-block'
         const CALLOUT_ORDERED_LIST_ROLE = 'external-callout-list'
 
-        const LOCATION_TOKEN_RX = /@(\d+)|(@\/[^\/]+?\/(?:i|g|gi|ig){0,2})/
-
+        const LOCATION_TOKEN_RX = /@(\d+)|(@\/(?:\\\/|[^\/])+?\/[ig]{0,2})/
         const LOCATION_TOKEN_ARRAY_RX =
-            /^(@\d+|@\/[^\/]+?\/(i|g|gi|ig){0,2})((\s+@\d+)|(\s+@\/[^\/]+?\/(i|g|gi|ig){0,2}))*$/
+            /^(@\d+|@\/(?:\\\/|[^\/]|)+?\/[ig]{0,2})((\s+@\d+)|(\s+@\/(?:\\\/|[^\/]|)+?\/[ig]{0,2}))*$/
+
+        const SEARCH_STRING_RX = /\/((?:\\\/|[^\/])+?)\//
+        const SEARCH_OPTIONS_RX = /\/(?:\\\/|[^\/])+?\/([ig]{0,2})/
 
         self.process(function (document) {
 
@@ -111,10 +113,11 @@ module.exports = function (registry) {
                         //We must be dealing with a string matcher
 
                         // Is this a global search?
-                        let global_search = location.match(/\/([^\/]+?)\/.*g.*/) != null
-                        let case_insensitive = location.match(/\/([^\/]+?)\/.*i.*/) != null
-                        let search_string = location.match(/\/([^\/]+?)\//)[1]
-                        let numbers = find_matching_lines(search_string, global_search, case_insensitive, owner_block)
+                        let search_options = get_search_options(location)
+
+                        let search_string = location.match(SEARCH_STRING_RX)[1]
+                        let numbers = find_matching_lines(search_string, search_options["global_search"],
+                            search_options["case_insensitive"], owner_block)
 
                         if (numbers.size > 0) {
 
@@ -219,6 +222,37 @@ module.exports = function (registry) {
 
             return found_line_numbers
         }
+
+        function get_search_options(location) {
+
+            let options = {
+                "case_insensitive": false,
+                "global_search": false
+            }
+
+            let matches = location.match(SEARCH_OPTIONS_RX)
+
+            if (matches === "") {
+                return options
+            }
+
+            // This is just for completeness, but make sure that
+            // none of the options are mentioned twice in the list
+            if (/^(.).*\1$/.test(matches[1])) {
+                throw `Invalid search options: ${matches[1]}`
+            }
+
+            if (matches[1].includes('g')) {
+                options["global_search"] = true;
+            }
+
+            if (matches[1].includes('i')) {
+                options["case_insensitive"] = true
+            }
+
+            return options;
+        }
+
 
         String.prototype.is_numeric = function () {
             return this.match(/^\d+$/)

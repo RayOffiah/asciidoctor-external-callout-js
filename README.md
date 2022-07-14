@@ -57,13 +57,13 @@ Two types of location token are supported:
 If you have a large listing then it may be preferable to use the text search rather than counting all the lines. It may also be preferable to use a smaller listing, as a long listing might mean that your description is a bit too general.
 Using the text search method means that the location of the callout will move with the line; handy if you're referencing a source file that might get the occasional tweak outside your control.
 
-@/_text_/g
+**@/_text_/g**
 : Works the same as the standard text search; the `g` flag means that callouts willl be added to _all_ the lines that match the search string, instead of just the first one.
 
-@/_text_/i
+**@/_text_/i**
 : This is a case-insensitive search.
 
-@/_text_/gi
+**@/_text_/gi**
 : And of course, you can combine the two, though I'm not sure why you'd want to.
 
 You can have multiple callouts on the same line.

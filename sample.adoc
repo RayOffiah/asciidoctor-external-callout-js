@@ -21,7 +21,7 @@ class ExternalCalloutTreeProcessor < Extensions::TreeProcessor
           result << line
         end
 
-        result << 'Eureka'
+        result << 'Eur/eka'
 
         src.lines.replace result
         wait_thr.value
@@ -44,4 +44,5 @@ Can I add something in here?
 . this is a string find @/result/
 . Out of range @500
 . Can't have zero lines @0
-
+. Find Eureka @/Eur\/eka/
+. Invalid search options @/search/gg

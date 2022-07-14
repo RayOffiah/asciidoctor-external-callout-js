@@ -2,6 +2,13 @@
 
 Record of bug fixes, enhancements, and changes.
 
+## [1.1.3] – 2022-07-07-16
+
+### Fixed
+
+- The global and case-insensitive flags (ig) are now parsing correctly: using ii or gg will cause prevent the callout block from being processed. Thanks to Hakim Cassimally for finding the bug.
+- Escaped slash characters were not being processed in the search.  Thanks to Hakim Cassimally for finding the bug.
+- 
 ## [1.1.1] – 2022-06-23
 
 ### Fixed
