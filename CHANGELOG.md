@@ -2,6 +2,12 @@
 
 Record of bug fixes, enhancements, and changes.
 
+## [1.2.0] – 2022-07-16
+
+### Added
+
+- Dropped in a new extension (`asciidoctor-callout-list-block`) that can be used to style an ordered list so that it looks like a callout list. Click [here](README.md#and-something-extra-) for details.
+- 
 ## [1.1.3] – 2022-07-07-16
 
 ### Fixed

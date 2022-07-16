@@ -115,3 +115,15 @@ div.external-callout-block i.conum {
 The callout attaches a class called `external-callout-block` to each source listing it processes. You can use this to differentiate between standard callouts, and callouts written by the extension.
 
 The extension also adds a class called `external-callout-list` to the list of definitions at the bottom of the source block. (There's probably no need to adjust the styling for this.)
+
+## And something extra …
+We've dropped in a new extension called `asciidoctor-callout-list-block` that will style an ordered list so that it looks just like a callout list:
+
+```asciidoc
+[calloutlist]
+. This is the first item
+. This is the second item.
+```
+
+Use it drop in callout lists wherever you need them.
+

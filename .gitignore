@@ -1,5 +1,7 @@
 /package-lock.json
 sample.html
+callout-list-sample.html
+/.asciidoctor
 /node_modules
 /.idea
 callout-list-sample.html
