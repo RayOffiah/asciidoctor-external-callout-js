@@ -24,6 +24,12 @@ echo "Total number of arguments is $#"
 . Explain the total number of arguments   @/number of .+/
 . This is a very high number @500
 . There is no line zero @0
+
+//-
+
+[calloutlist]
+. This is a standalone callout block.
+. You can use it to add callout references to annotated images.
 `
     let converted_doc = asciidoctor.convert(input_document,{safe: 'safe', standalone: true,
         extension_registry: registry})
@@ -36,5 +42,7 @@ echo "Total number of arguments is $#"
 
     expect(converted_doc.includes('<b>(3)</b>') || converted_doc.includes('<b>(4)</b>')).toBe(false)
 
+    // Make sure the last item is a standalone callout list
+    expect(converted_doc.includes('class="colist calloutlist"')).toBeTruthy()
 
 })

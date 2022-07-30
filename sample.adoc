@@ -45,3 +45,9 @@ Can I add something in here?
 . Out of range @500
 . Can't have zero lines @0
 . Find Eureka @/Eur\/eka/
+
+//-
+
+[calloutlist]
+. This is a standalone callout block.
+. You can use it to add callout references to annotated images.
