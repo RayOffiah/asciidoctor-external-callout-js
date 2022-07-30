@@ -9,6 +9,8 @@ module.exports = function (registry) {
         const CALLOUT_SOURCE_BLOCK_ROLE = 'external-callout-block'
         const CALLOUT_ORDERED_LIST_ROLE = 'external-callout-list'
 
+        const STANDALONE_CALLOUT_LIST_STYLE = 'calloutlist'
+
         const LOCATION_TOKEN_RX = /@(\d+)|(@\/(?:\\\/|[^\/])+?\/[ig]{0,2})/
         const LOCATION_TOKEN_ARRAY_RX =
             /^(@\d+|@\/(?:\\\/|[^\/]|)+?\/[ig]{0,2})((\s+@\d+)|(\s+@\/(?:\\\/|[^\/]|)+?\/[ig]{0,2}))*$/
@@ -20,32 +22,40 @@ module.exports = function (registry) {
 
             document.findBy({'context': 'olist'}, function (list) {
 
+                if (list.style.includes(STANDALONE_CALLOUT_LIST_STYLE)) {
 
-                if (is_external_callout_list(list)) {
+                    list.context = list.node_name = 'colist'
 
-                    try {
+                }
+                else {
 
-                        let owner_block = owning_block(list)
+                    if (is_external_callout_list(list)) {
 
-                        if (!owner_block.getSubstitutions().includes("callouts")) {
-                            owner_block.getSubstitutions().push("callouts")
+                        try {
+
+                            let owner_block = owning_block(list)
+
+                            if (!owner_block.getSubstitutions().includes("callouts")) {
+                                owner_block.getSubstitutions().push("callouts")
+                            }
+
+                            process_callouts(list, owner_block)
+                            list.context = list.node_name = 'colist'
+
+                            if (!list.getRoles().includes(CALLOUT_ORDERED_LIST_ROLE)) {
+                                list.addRole(CALLOUT_ORDERED_LIST_ROLE)
+                            }
+
+                            if (!owner_block.getRoles().includes(CALLOUT_SOURCE_BLOCK_ROLE)) {
+                                owner_block.addRole(CALLOUT_SOURCE_BLOCK_ROLE)
+                            }
+
+                        } catch (e) {
+                            console.error(e)
                         }
-
-                        process_callouts(list, owner_block)
-                        list.context = list.node_name = 'colist'
-
-                        if (!list.getRoles().includes(CALLOUT_ORDERED_LIST_ROLE)) {
-                            list.addRole(CALLOUT_ORDERED_LIST_ROLE)
-                        }
-
-                        if (!owner_block.getRoles().includes(CALLOUT_SOURCE_BLOCK_ROLE)) {
-                            owner_block.addRole(CALLOUT_SOURCE_BLOCK_ROLE)
-                        }
-
-                    } catch (e) {
-                        console.error(e)
                     }
                 }
+
             })
 
             return document

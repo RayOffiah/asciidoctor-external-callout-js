@@ -69,6 +69,14 @@ Using the text search method means that the location of the callout will move wi
 You can have multiple callouts on the same line.
 You can also mix and match numeric and text callout tokens on the same list item. (Though I'm not sure why you would).
 
+## Standalone callout lists
+You can create a standalone callout list by adding the `calloutlist` role to an ordered list. This simply styles the list to make it look like a list of callouts so you can use it as a reference to annoted images etc.
+```asciidoc
+[calloutlist]
+. This list can be used to add references to annotated images
+. The list will look like a standard callout list.
+```
+
 
 ## Installation
 
