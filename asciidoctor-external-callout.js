@@ -18,22 +18,23 @@ module.exports = function (registry) {
         const SEARCH_STRING_RX = /\/((?:\\\/|[^\/])+?)\//
         const SEARCH_OPTIONS_RX = /\/(?:\\\/|[^\/])+?\/([ig]{0,2})/
 
-        self.process(function (document) {
+        self.process(document => {
 
-            document.findBy({'context': 'olist'}, function (list) {
+            let lists = document.findBy({'context': 'olist'})
 
-                if (list.style.includes(STANDALONE_CALLOUT_LIST_STYLE)) {
+            lists.forEach(list =>
+            {
+                if (list.getStyle().includes(STANDALONE_CALLOUT_LIST_STYLE)) {
 
                     list.context = list.node_name = 'colist'
 
-                }
-                else {
+                } else {
 
                     if (is_external_callout_list(list)) {
 
                         try {
 
-                            let owner_block = owning_block(list)
+                            let owner_block = owning_block(document, list)
 
                             if (!owner_block.getSubstitutions().includes("callouts")) {
                                 owner_block.getSubstitutions().push("callouts")
@@ -73,7 +74,7 @@ module.exports = function (registry) {
                 let item_under_test = x.text
                 let location_token_index = item_under_test.search(LOCATION_TOKEN_RX)
 
-                // if we don't find the start of the list of location tokens, or the token is the first item
+                // if we don't find the start of the location tokens, or the token is the first item,
                 // then we don't need to carry on any further; this is not the list we are looking for.
 
                 if (location_token_index < 1) {
@@ -96,7 +97,7 @@ module.exports = function (registry) {
 
                 let location_token_index = item.search(LOCATION_TOKEN_RX)
 
-                // Just the locations tokens at the end of the item.
+                // Just find the locations tokens at the end of the item.
                 let location_tokens = item.substring(location_token_index).trim()
 
                 // The text of the item itself
@@ -131,7 +132,7 @@ module.exports = function (registry) {
 
                         if (numbers.size > 0) {
 
-                            // This is how you union two sets, apparently.
+                            // This is how you perform a union of two sets, apparently.
                             line_numbers = new Set([...line_numbers, ...numbers])
 
                         } else {
@@ -155,15 +156,15 @@ module.exports = function (registry) {
             })
         }
 
-        function owning_block(list) {
+        function owning_block(document, list) {
 
-            let block_parent = list.getParent()
+            let all_blocks = document.findBy({})
 
-            if (block_parent === undefined) {
-                throw "There is no block above the callout list"
+            if (all_blocks === undefined) {
+                throw "There are no valid blocks in this document"
             }
 
-            let index_back = block_parent.getBlocks().findIndex((block) => block === list)
+            let index_back = all_blocks.findIndex((block) => block === list)
 
             if (index_back === undefined) {
                 // Shouldn't happen because we managed to get this far
@@ -176,13 +177,13 @@ module.exports = function (registry) {
 
                 index_back = index_back - 1;
 
-                if (block_parent.getBlocks()[index_back].getContext() === 'listing') {
+                if (all_blocks[index_back].getContext() === 'listing') {
 
                     // We have found our matching block
-                    return block_parent.getBlocks()[index_back]
+                    return all_blocks[index_back]
                 }
 
-                if (block_parent.getBlocks()[index_back].getContext() === 'colist') {
+                if (all_blocks[index_back].getContext() === 'colist') {
 
                     // We have hit another callout list, but there was no list block first.
                     // Assume we have an error
@@ -191,7 +192,7 @@ module.exports = function (registry) {
 
             }
 
-            // If we didn't find a listing then this document has probably got
+            // If we didn't find a listing, then this document has probably got
             // bits missing.
             throw "No listing found"
         }
@@ -246,8 +247,8 @@ module.exports = function (registry) {
                 return options
             }
 
-            // This is just for completeness, but make sure that
-            // none of the options are mentioned twice in the list
+            // This is just for completeness but make sure that
+            // none of the options is mentioned twice in the list
             if (/^(.).*\1$/.test(matches[1])) {
                 throw `Invalid search options: ${matches[1]}`
             }

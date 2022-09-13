@@ -7,3 +7,7 @@ asciidoctor.convertFile('./sample.adoc', {safe: 'safe',
     standalone: true,
     extension_registry: registry})
 
+asciidoctor.convertFile('./nested-sample.adoc', {safe: 'safe',
+    attributes: {'stylesheet': './callout.css'},
+    standalone: true,
+    extension_registry: registry})
