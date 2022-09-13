@@ -2,6 +2,11 @@
 
 Record of bug fixes, enhancements, and changes.
 
+## [1.2.1] – 2022-09-16
+
+### Fixed
+- Fixed detection of source blocks that are nested inside other blocks.
+
 ## [1.2.0] – 2022-07-30
 
 ### Added

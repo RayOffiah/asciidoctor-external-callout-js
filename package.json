@@ -1,6 +1,6 @@
 {
   "name": "asciidoctor-external-callout",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Asciidoctor extension that adds support for callouts added outside the listing block.",
   "main": "asciidoctor-external-callout.js",
   "scripts": {
