@@ -2,6 +2,10 @@
 
 Record of bug fixes, enhancements, and changes.
 
+## [1.2.2] - 2025-05-04
+
+- Fixed bug caused the callout to apply all the callout to every line it matched, rather than just the first occurrence.
+
 ## [1.2.1] – 2022-09-16
 
 ### Fixed

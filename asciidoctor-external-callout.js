@@ -218,18 +218,16 @@ module.exports = function (registry) {
                 search_term = new RegExp(phrase)
             }
 
-
-            owner_block.getSourceLines().forEach((line, index) => {
-
+            const sourceLines = owner_block.getSourceLines();
+            for (let i = 0; i < sourceLines.length; i++) {
+                const line = sourceLines[i];
                 if (line.match(search_term) != null) {
-
-                   found_line_numbers.add(index)
+                    found_line_numbers.add(i);
+                    if (!global_search) {
+                        break;
+                    }
                 }
-
-                if (!global_search) {
-                    return found_line_numbers
-                }
-            })
+            }
 
             return found_line_numbers
         }
